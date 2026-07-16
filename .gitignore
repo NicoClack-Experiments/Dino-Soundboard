@@ -1,0 +1,8 @@
+node_modules/
+.svelte-kit/
+build/
+.npm-global/
+.npm-cache/
+.cache/
+*.log
+.DS_Store

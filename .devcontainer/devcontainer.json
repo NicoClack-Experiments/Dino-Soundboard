@@ -1,0 +1,96 @@
+{
+	"name": "SSG Dev Environment (Sandboxed)",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"args": {
+			"VARIANT": "22-bookworm"
+		}
+	},
+	"runArgs": [
+		"--name",
+		"ssg-devcontainer",
+		"--security-opt",
+		"seccomp=.devcontainer/seccomp-sandbox.json",
+		"--security-opt",
+		"no-new-privileges:true",
+		"--cap-drop",
+		"ALL",
+		"--cap-add",
+		"NET_BIND_SERVICE",
+		"--cap-add",
+		"NET_RAW",
+		"--cap-add",
+		"NET_ADMIN",
+		"--memory",
+		"4g",
+		"--memory-swap",
+		"4g",
+		"--cpus",
+		"2",
+		"--read-only",
+		"--tmpfs",
+		"/tmp:rw,noexec,nosuid,size=256m",
+		"--tmpfs",
+		"/var/run:rw,noexec,nosuid,size=32m",
+		"--tmpfs",
+		"/home/node/.cache:rw,noexec,nosuid,size=256m,uid=1000,gid=1000",
+		"--tmpfs",
+		"/home/node/.vscode-server:rw,noexec,nosuid,size=512m,uid=1000,gid=1000",
+		"--tmpfs",
+		"/home/node/.config:rw,noexec,nosuid,size=128m,uid=1000,gid=1000"
+	],
+	"workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+	"workspaceFolder": "/workspace",
+	"remoteUser": "node",
+	"containerUser": "node",
+	"mounts": [
+		{
+			"source": "ssg-npm-cache-${devcontainerId}",
+			"target": "/home/node/.npm-global",
+			"type": "volume"
+		}
+	],
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"dbaeumer.vscode-eslint",
+				"esbenp.prettier-vscode",
+				"bierner.markdown-mermaid",
+				"yzhang.markdown-all-in-one"
+			],
+			"settings": {
+				"terminal.integrated.shellArgs.linux": [],
+				"files.eol": "\n",
+				"files.insertFinalNewline": true,
+				"editor.formatOnSave": true,
+				"editor.defaultFormatter": "esbenp.prettier-vscode",
+				"editor.renderWhitespace": "boundary",
+				"security.workspace.trust.enabled": false,
+				"extensions.autoUpdate": false,
+				"extensions.autoCheckUpdates": false,
+				"workbench.settings.enableNaturalLanguageSearch": false,
+				"npm.autoDetect": "off",
+				"npm.enableScriptFromNodeModules": false,
+				"npm.fetchOnlinePackageInfo": false
+			}
+		}
+	},
+	"features": {
+		"ghcr.io/devcontainers/features/git:1": {
+			"version": "latest"
+		},
+		"ghcr.io/devcontainers/features/common-utils:2": {
+			"installZsh": true,
+			"upgradePackages": false,
+			"nonFreePackages": false
+		}
+	},
+	"postCreateCommand": "echo 'Sandboxed SSG devcontainer ready. Default: npm scripts blocked. Run: npm config set ignore-scripts false  # only if you trust the packages'",
+	"shutdownAction": "stopContainer",
+	"remoteEnv": {
+		"NODE_ENV": "development",
+		"npm_config_ignore_scripts": "true",
+		"npm_config_audit": "true",
+		"npm_config_fund": "false"
+	}
+}

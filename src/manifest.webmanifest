@@ -1,0 +1,11 @@
+{
+	"name": "My SvelteKit App",
+	"short_name": "SvelteKit",
+	"description": "A SvelteKit PWA that works offline",
+	"icons": [],
+	"start_url": "/",
+	"background_color": "#ffffff",
+	"theme_color": "#ff3e00",
+	"display": "fullscreen",
+	"orientation": "any"
+}
