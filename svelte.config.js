@@ -1,12 +1,22 @@
 import { vitePreprocess } from "@sveltejs/kit/vite";
 import { adapter, standardGetLast } from "sveltekit-adapter-versioned-worker";
 
+const URL_PREFIX = "Dino-Soundboard";
+
+const dev = process.env.NODE_ENV !== "production";
+const disableBaseURL = process.env.DISABLE_BASE_URL === "true";
+const baseURL =
+	dev || disableBaseURL || URL_PREFIX === "" ? "" : `/${URL_PREFIX}`;
+
 const isTestBuild = process.env.IS_TEST_BUILD === "true";
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	preprocess: vitePreprocess(),
 	kit: {
+		paths: {
+			base: baseURL,
+		},
 		adapter: adapter({
 			lastInfo: standardGetLast(
 				"https://nicoclack-experiments.github.io/Dino-Soundboard/versionedWorker.json",

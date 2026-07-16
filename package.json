@@ -5,7 +5,7 @@
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
-		"testBuild": "cross-env IS_TEST_BUILD=true vite build",
+		"testBuild": "cross-env IS_TEST_BUILD=true DISABLE_BASE_URL=true vite build",
 		"preview": "http-server build",
 		"format": "prettier --write .",
 		"format:check": "prettier --check ."
