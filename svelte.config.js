@@ -1,9 +1,11 @@
+import { vitePreprocess } from "@sveltejs/kit/vite";
 import { adapter, standardGetLast } from "sveltekit-adapter-versioned-worker";
 
 const isTestBuild = process.env.IS_TEST_BUILD === "true";
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
+	preprocess: vitePreprocess(),
 	kit: {
 		adapter: adapter({
 			lastInfo: standardGetLast(
