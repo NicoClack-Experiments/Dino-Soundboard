@@ -9,7 +9,7 @@ const config = {
 	kit: {
 		adapter: adapter({
 			lastInfo: standardGetLast(
-				"https://example.com/versionedWorker.json",
+				"https://nicoclack-experiments.github.io/Dino-Soundboard/versionedWorker.json",
 				isTestBuild,
 			),
 		}),
