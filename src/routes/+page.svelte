@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { soundCategories } from "$lib/sounds";
 
+	let pointerHandled = false;
+
 	function random(min: number, max: number): number {
 		return Math.random() * (max - min) + min;
 	}
@@ -14,6 +16,41 @@
 		audio.playbackRate = speed;
 		audio.play();
 	}
+
+	function playRandomSound(category: (typeof soundCategories)[number]) {
+		play(
+			pickSound(category.sounds),
+			random(category.minSpeed, category.maxSpeed),
+		);
+	}
+
+	function handlePointerDown(category: (typeof soundCategories)[number]) {
+		pointerHandled = true;
+		playRandomSound(category);
+		setTimeout(() => {
+			pointerHandled = false;
+		}, 100);
+	}
+
+	function handleClick(category: (typeof soundCategories)[number]) {
+		if (!pointerHandled) {
+			playRandomSound(category);
+		}
+	}
+
+	function handleKeyDown(
+		e: KeyboardEvent,
+		category: (typeof soundCategories)[number],
+	) {
+		if (e.key === "Enter" || e.key === " ") {
+			e.preventDefault();
+			pointerHandled = true;
+			playRandomSound(category);
+			setTimeout(() => {
+				pointerHandled = false;
+			}, 100);
+		}
+	}
 </script>
 
 <main>
@@ -23,11 +60,9 @@
 			<button
 				type="button"
 				style="background: {category.color}"
-				on:click={() =>
-					play(
-						pickSound(category.sounds),
-						random(category.minSpeed, category.maxSpeed),
-					)}
+				on:pointerdown={() => handlePointerDown(category)}
+				on:keydown={(e) => handleKeyDown(e, category)}
+				on:click={() => handleClick(category)}
 			>
 				{category.name}
 			</button>
