@@ -5,3 +5,9 @@
 <ServiceWorker />
 
 <slot />
+
+<style>
+	:global(body) {
+		background: #202020;
+	}
+</style>

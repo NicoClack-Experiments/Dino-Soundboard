@@ -1,17 +1,35 @@
 <script lang="ts">
-	import { sounds } from "$lib/sounds";
+	import { soundCategories } from "$lib/sounds";
 
-	function play(url: string) {
-		new Audio(url).play();
+	function random(min: number, max: number): number {
+		return Math.random() * (max - min) + min;
+	}
+
+	function pickSound(urls: string[]): string {
+		return urls[Math.floor(Math.random() * urls.length)];
+	}
+
+	function play(url: string, speed: number) {
+		const audio = new Audio(url);
+		audio.playbackRate = speed;
+		audio.play();
 	}
 </script>
 
 <main>
-	<h1>Soundboard</h1>
-	<div class="grid">
-		{#each sounds as sound (sound.url)}
-			<button type="button" on:click={() => play(sound.url)}>
-				{sound.title}
+	<h1>Dino Soundboard</h1>
+	<div class="grid" style="--count: {soundCategories.length}">
+		{#each soundCategories as category (category.name)}
+			<button
+				type="button"
+				style="background: {category.color}"
+				on:click={() =>
+					play(
+						pickSound(category.sounds),
+						random(category.minSpeed, category.maxSpeed),
+					)}
+			>
+				{category.name}
 			</button>
 		{/each}
 	</div>
@@ -34,11 +52,12 @@
 		text-align: center;
 		font-size: 2rem;
 		margin-bottom: 20px;
+		color: #e0e0e0;
 	}
 
 	.grid {
 		display: grid;
-		grid-template-columns: repeat(2, 1fr);
+		grid-template-columns: repeat(1, 1fr);
 		gap: 12px;
 	}
 
@@ -52,25 +71,25 @@
 		font-weight: 600;
 		border: none;
 		border-radius: 12px;
-		background: #3b82f6;
 		color: #fff;
+		mix-blend-mode: difference;
 		cursor: pointer;
 		touch-action: manipulation;
 		-webkit-tap-highlight-color: transparent;
 		user-select: none;
 		transition:
 			transform 0.1s,
-			background 0.15s;
+			filter 0.15s;
 	}
 
 	button:active {
 		transform: scale(0.95);
-		background: #2563eb;
+		filter: brightness(0.8);
 	}
 
 	@media (min-width: 400px) {
 		.grid {
-			grid-template-columns: repeat(3, 1fr);
+			grid-template-columns: repeat(var(--count, 3), 1fr);
 		}
 	}
 </style>
