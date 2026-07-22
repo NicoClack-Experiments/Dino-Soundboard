@@ -2,6 +2,7 @@
 	import { soundCategories } from "$lib/sounds";
 
 	let pointerHandled = false;
+	const audioInstances: HTMLAudioElement[] = [];
 
 	function random(min: number, max: number): number {
 		return Math.random() * (max - min) + min;
@@ -15,6 +16,19 @@
 		const audio = new Audio(url);
 		audio.playbackRate = speed;
 		audio.play();
+		audioInstances.push(audio);
+		audio.addEventListener("ended", () => {
+			const idx = audioInstances.indexOf(audio);
+			if (idx !== -1) audioInstances.splice(idx, 1);
+		});
+	}
+
+	function stopAll() {
+		for (const audio of audioInstances) {
+			audio.pause();
+			audio.currentTime = 0;
+		}
+		audioInstances.length = 0;
 	}
 
 	function playRandomSound(category: (typeof soundCategories)[number]) {
@@ -68,6 +82,9 @@
 			</button>
 		{/each}
 	</div>
+	<button type="button" class="stop-btn" on:click={stopAll}>
+		Stop All
+	</button>
 </main>
 
 <style>
@@ -126,5 +143,34 @@
 		.grid {
 			grid-template-columns: repeat(var(--count, 3), 1fr);
 		}
+	}
+
+	.stop-btn {
+		width: 100%;
+		margin-top: 16px;
+		min-height: 56px;
+		font-size: 1.15rem;
+		font-weight: 600;
+		border: 2px solid #ff4444;
+		border-radius: 12px;
+		background: transparent;
+		color: #ff4444;
+		cursor: pointer;
+		touch-action: manipulation;
+		-webkit-tap-highlight-color: transparent;
+		user-select: none;
+		transition:
+			background 0.15s,
+			color 0.15s,
+			transform 0.1s;
+	}
+
+	.stop-btn:hover {
+		background: #ff4444;
+		color: #fff;
+	}
+
+	.stop-btn:active {
+		transform: scale(0.97);
 	}
 </style>
