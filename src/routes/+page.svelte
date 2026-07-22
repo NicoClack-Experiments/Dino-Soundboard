@@ -139,7 +139,7 @@
 		filter: brightness(0.8);
 	}
 
-	@media (min-width: 400px) {
+	@media (min-width: 500px) {
 		.grid {
 			grid-template-columns: repeat(var(--count, 3), 1fr);
 		}
